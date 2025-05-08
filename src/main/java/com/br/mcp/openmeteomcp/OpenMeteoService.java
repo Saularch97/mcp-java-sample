@@ -33,13 +33,13 @@ public class OpenMeteoService {
 
         System.out.println("Making call to " + uri);
 
-        // TODO openFeign would be an alternative to restClient?
         var forecast = restClient.get()
                 .uri(uri)
                 .retrieve()
                 .body(WeatherResponse.class);
 
         assert forecast != null;
+
         return String.format("""
                 Latitude: %.2f
                 Longitude: %.2f
