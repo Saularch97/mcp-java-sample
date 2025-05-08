@@ -1,11 +1,9 @@
 package com.br.mcp.openmeteomcp;
 
 import com.br.mcp.openmeteomcp.model.WeatherResponse;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -25,15 +23,10 @@ public class OpenMeteoService {
 
     @Tool(description = "Get weather forecast for a specific latitude/longitude")
     public String getWeatherForecastByLocation(double latitude, double longitude) {
-
-        // talvez precise tirar scheme host e deixar path pois ja tem na baseurl
-
         URI uri = UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("api.open-meteo.com")
                 .path("/v1/forecast")
-                .queryParam("latitude", -23.55)
-                .queryParam("longitude", -46.63)
+                .queryParam("latitude", latitude)
+                .queryParam("longitude", longitude)
                 .queryParam("current_weather", true)
                 .build()
                 .toUri();
@@ -47,7 +40,6 @@ public class OpenMeteoService {
                 .body(WeatherResponse.class);
 
         assert forecast != null;
-
         return String.format("""
                 Latitude: %.2f
                 Longitude: %.2f
@@ -103,6 +95,6 @@ public class OpenMeteoService {
 
     public static void main(String[] args) {
         OpenMeteoService client = new OpenMeteoService();
-        System.out.println(client.getWeatherForecastByLocation(-23.5, -46.5));
+        System.out.println(client.getWeatherForecastByLocation(20.0, 20.0));
     }
 }
